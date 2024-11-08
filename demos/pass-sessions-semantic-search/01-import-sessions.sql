@@ -18,8 +18,7 @@ cross apply
         abstract nvarchar(max),
         published nvarchar(100),
         [status] nvarchar(100),
-        participants nvarchar(max) as json,
-        attributeValues nvarchar(max) as json
+        participants nvarchar(max) as json -- will support JSON data type soon
     ) se
 cross apply
     openjson(se.participants) with 
@@ -45,11 +44,6 @@ from
 cross apply
     openjson(c.BulkColumn) with (
         sessionCode int,
-        title nvarchar(1000),
-        abstract nvarchar(max),
-        published nvarchar(100),
-        [status] nvarchar(100),
-        participants nvarchar(max) as json,
         attributeValues nvarchar(max) as json
     ) se
 cross apply
@@ -82,7 +76,7 @@ with s1 as
 s2 as (
     select 
         sessionCode as session_id,
-        json_objectagg(attribute:attributeValue) as properties
+        cast(json_objectagg(attribute:attributeValue) as json) as properties
     from 
         #s2
     group by
@@ -92,14 +86,17 @@ select
     s1.session_id,
     s1.title,
     s1.abstract,
-    s1.speakers,
-    s2.properties
+    cast(s1.speakers as json) as speakers,
+    cast(s2.properties as json) as properties
 into    
     dbo.pass_sessions
 from
     s1
 inner join 
     s2 on s1.session_id = s2.session_id
+go
+
+select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'pass_sessions'
 go
 
 update
