@@ -28,6 +28,8 @@ cross apply
     ) sp
 go
 
+select * from #s1;
+
 /*
 	Import JSON values (Sessions and properties)
 */
@@ -58,6 +60,8 @@ cross apply
     ) a
 where a.attribute in ('Session Type', 'Session Category', 'Track', 'Level')
 go
+
+select * from #s2;
 
 /*
 	Create session table
@@ -96,6 +100,12 @@ from
     s1
 inner join 
     s2 on s1.session_id = s2.session_id
+go
+
+update
+    [dbo].[pass_sessions]
+set
+    [properties] = json_modify(properties, '$.Level', cast(left(json_value([properties], '$.Level'), 4) as int)) 
 go
 
 alter table dbo.pass_sessions

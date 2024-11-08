@@ -1,0 +1,2 @@
+truncate table dbo.pass_sessions_abstracts_embeddings
+truncate table dbo.pass_sessions_speakers_embeddings

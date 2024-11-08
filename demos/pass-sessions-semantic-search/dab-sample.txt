@@ -1,0 +1,9 @@
+dotnet tool install --global Microsoft.DataAPIBuilder
+
+dab init --database-type mssql --host-mode development --connection-string "@env('MSSQL')"
+
+dab add Session --source "dbo.pass_sessions" --permissions "anonymous:*" --rest "sessions"
+
+dab add FindSession --source "dbo.find_sessions" --source.type "stored-procedure" --permissions "anonymous:*" --rest "findSessions"
+
+dab start
