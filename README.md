@@ -10,4 +10,4 @@ Demos used at PASS Summit 2024
 
 ## Unlocking the Power of Azure SQL Database: AI, Elastic Pools, and Beyond
 
-See folder ./demos
+See folder `./demos`
